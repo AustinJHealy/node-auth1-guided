@@ -5,11 +5,16 @@ const usersRouter = require("./users/users-router")
 
 const server = express()
 const port = process.env.PORT || 5000
+const session = require("express-session")
 
 server.use(helmet())
 server.use(cors())
 server.use(express.json())
-
+server.use(session({
+	resave: false, //avoids creating sessions that haven't changed
+	saveUninitialized: false, // GDPR laws against setting cookies automatically
+	secret: "keep it secret, keep it safe", //used to cryptographically sign the cookie
+}))
 server.use(usersRouter)
 
 server.use((err, req, res, next) => {
